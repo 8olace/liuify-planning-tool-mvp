@@ -1,7 +1,12 @@
 'use client'
 
 import { useState, useEffect } from 'react'
-import { shiftsService, locationsService } from '@/lib/supabase'
+import { shiftsService } from '@/lib/supabase'
+import { Alert, AlertTitle, AlertDescription } from '@/components/ui/alert'
+import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from '@/components/ui/table'
+import { Badge } from '@/components/ui/badge'
+import { Button } from '@/components/ui/button'
+import { AlertCircle } from 'lucide-react'
 
 export default function ShiftsPage() {
   const [shifts, setShifts] = useState([])
@@ -26,60 +31,68 @@ export default function ShiftsPage() {
     }
   }
 
-  const getStatusBadgeClass = (status) => {
-    if (status === 'filled') return 'badge-available'
-    if (status === 'open') return 'badge-unavailable'
-    return ''
+  const getStatusVariant = (status) => {
+    if (status === 'filled') return 'success'
+    if (status === 'open') return 'warning'
+    return 'default'
   }
 
   return (
-    <div>
-      <div className="page-header">
-        <h1>Shifts Management</h1>
-        <button className="btn-primary" disabled>
-          + Add New Shift (Coming Soon)
-        </button>
+    <div className="space-y-6">
+      <div className="flex justify-between items-center">
+        <div>
+          <h1 className="text-3xl font-bold tracking-tight">Shifts Management</h1>
+          <p className="text-gray-600 mt-1">View and manage all shifts</p>
+        </div>
+        <Button disabled>+ Add New Shift (Coming Soon)</Button>
       </div>
 
-      {error && <div className="alert alert-error">{error}</div>}
+      {error && (
+        <Alert variant="destructive">
+          <AlertCircle className="h-4 w-4" />
+          <AlertTitle>Error</AlertTitle>
+          <AlertDescription>{error}</AlertDescription>
+        </Alert>
+      )}
 
       {loading ? (
-        <div className="loading">
-          <div className="spinner"></div>
-          <p>Loading shifts...</p>
+        <div className="flex justify-center items-center py-12">
+          <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-primary"></div>
         </div>
       ) : shifts.length === 0 ? (
-        <div className="empty-state" style={{ background: 'white', borderRadius: '8px', margin: '20px 0' }}>
-          <h3>No shifts found</h3>
-          <p>Shifts management coming soon</p>
+        <div className="text-center py-12 bg-white rounded-lg border border-gray-200">
+          <h3 className="text-lg font-semibold text-gray-900">No shifts found</h3>
+          <p className="text-gray-600 mt-1">Shifts management coming soon</p>
         </div>
       ) : (
-        <table className="guards-table">
-          <thead>
-            <tr>
-              <th>Location</th>
-              <th>Start Time</th>
-              <th>End Time</th>
-              <th>Required Guards</th>
-              <th>Status</th>
-            </tr>
-          </thead>
-          <tbody>
-            {shifts.map((shift) => (
-              <tr key={shift.id}>
-                <td>{shift.location?.name || 'N/A'}</td>
-                <td>{new Date(shift.start_time).toLocaleString()}</td>
-                <td>{new Date(shift.end_time).toLocaleString()}</td>
-                <td>{shift.required_guards}</td>
-                <td>
-                  <span className={`badge ${getStatusBadgeClass(shift.status)}`}>
-                    {shift.status}
-                  </span>
-                </td>
-              </tr>
-            ))}
-          </tbody>
-        </table>
+        <div className="bg-white rounded-lg border border-gray-200 shadow">
+          <Table>
+            <TableHeader>
+              <TableRow>
+                <TableHead>Location</TableHead>
+                <TableHead>Start Time</TableHead>
+                <TableHead>End Time</TableHead>
+                <TableHead>Required Guards</TableHead>
+                <TableHead>Status</TableHead>
+              </TableRow>
+            </TableHeader>
+            <TableBody>
+              {shifts.map((shift) => (
+                <TableRow key={shift.id}>
+                  <TableCell className="font-medium">{shift.location?.name || 'N/A'}</TableCell>
+                  <TableCell>{new Date(shift.start_time).toLocaleString()}</TableCell>
+                  <TableCell>{new Date(shift.end_time).toLocaleString()}</TableCell>
+                  <TableCell>{shift.required_guards}</TableCell>
+                  <TableCell>
+                    <Badge variant={getStatusVariant(shift.status)}>
+                      {shift.status}
+                    </Badge>
+                  </TableCell>
+                </TableRow>
+              ))}
+            </TableBody>
+          </Table>
+        </div>
       )}
     </div>
   )

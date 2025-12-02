@@ -3,6 +3,11 @@
 import { useState, useEffect } from 'react'
 import AddEditGuardModal from '@/components/AddEditGuardModal'
 import { guardsService } from '@/lib/supabase'
+import { Button } from '@/components/ui/button'
+import { Badge } from '@/components/ui/badge'
+import { Alert, AlertTitle, AlertDescription } from '@/components/ui/alert'
+import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from '@/components/ui/table'
+import { AlertCircle, CheckCircle, Trash2, Edit2, Plus } from 'lucide-react'
 
 export default function GuardsPage() {
   const [guards, setGuards] = useState([])
@@ -90,76 +95,97 @@ export default function GuardsPage() {
   }
 
   return (
-    <div>
-      <div className="page-header">
-        <h1>Guards Management</h1>
-        <button className="btn-primary" onClick={() => handleOpenModal()}>
-          + Add New Guard
-        </button>
+    <div className="space-y-6">
+      <div className="flex justify-between items-center">
+        <div>
+          <h1 className="text-3xl font-bold tracking-tight">Guards Management</h1>
+          <p className="text-gray-600 mt-1">Manage all security guards in your system</p>
+        </div>
+        <Button onClick={() => handleOpenModal()} size="lg">
+          <Plus className="w-4 h-4 mr-2" />
+          Add New Guard
+        </Button>
       </div>
 
-      {error && <div className="alert alert-error">{error}</div>}
-      {success && <div className="alert alert-success">{success}</div>}
+      {error && (
+        <Alert variant="destructive">
+          <AlertCircle className="h-4 w-4" />
+          <AlertTitle>Error</AlertTitle>
+          <AlertDescription>{error}</AlertDescription>
+        </Alert>
+      )}
+
+      {success && (
+        <Alert variant="success">
+          <CheckCircle className="h-4 w-4" />
+          <AlertTitle>Success</AlertTitle>
+          <AlertDescription>{success}</AlertDescription>
+        </Alert>
+      )}
 
       {loading ? (
-        <div className="loading">
-          <div className="spinner"></div>
-          <p>Loading guards...</p>
+        <div className="flex justify-center items-center py-12">
+          <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-primary"></div>
         </div>
       ) : guards.length === 0 ? (
-        <div className="empty-state" style={{ background: 'white', borderRadius: '8px', margin: '20px 0' }}>
-          <h3>No guards found</h3>
-          <p>Get started by adding your first guard</p>
-          <button className="btn-primary" onClick={() => handleOpenModal()}>
+        <div className="text-center py-12 bg-white rounded-lg border border-gray-200">
+          <h3 className="text-lg font-semibold text-gray-900">No guards found</h3>
+          <p className="text-gray-600 mt-1 mb-4">Get started by adding your first guard</p>
+          <Button onClick={() => handleOpenModal()}>
+            <Plus className="w-4 h-4 mr-2" />
             Add First Guard
-          </button>
+          </Button>
         </div>
       ) : (
-        <table className="guards-table">
-          <thead>
-            <tr>
-              <th>Name</th>
-              <th>Email</th>
-              <th>Phone</th>
-              <th>Tier</th>
-              <th>Status</th>
-              <th>Actions</th>
-            </tr>
-          </thead>
-          <tbody>
-            {guards.map((guard) => (
-              <tr key={guard.id}>
-                <td>{guard.name}</td>
-                <td>{guard.email || '-'}</td>
-                <td>{guard.phone || '-'}</td>
-                <td>Tier {guard.tier}</td>
-                <td>
-                  <span className={guard.is_available ? 'badge badge-available' : 'badge badge-unavailable'}>
-                    {guard.is_available ? 'Available' : 'Unavailable'}
-                  </span>
-                </td>
-                <td>
-                  <div className="actions">
-                    <button
-                      className="btn-primary"
-                      onClick={() => handleOpenModal(guard)}
-                      style={{ padding: '6px 12px', fontSize: '12px' }}
-                    >
-                      Edit
-                    </button>
-                    <button
-                      className="btn-danger"
-                      onClick={() => handleDeleteGuard(guard.id)}
-                      style={{ padding: '6px 12px', fontSize: '12px' }}
-                    >
-                      Delete
-                    </button>
-                  </div>
-                </td>
-              </tr>
-            ))}
-          </tbody>
-        </table>
+        <div className="bg-white rounded-lg border border-gray-200 shadow">
+          <Table>
+            <TableHeader>
+              <TableRow>
+                <TableHead>Name</TableHead>
+                <TableHead>Email</TableHead>
+                <TableHead>Phone</TableHead>
+                <TableHead>Tier</TableHead>
+                <TableHead>Status</TableHead>
+                <TableHead className="text-right">Actions</TableHead>
+              </TableRow>
+            </TableHeader>
+            <TableBody>
+              {guards.map((guard) => (
+                <TableRow key={guard.id}>
+                  <TableCell className="font-medium">{guard.name}</TableCell>
+                  <TableCell>{guard.email || '-'}</TableCell>
+                  <TableCell>{guard.phone || '-'}</TableCell>
+                  <TableCell>
+                    <Badge variant="secondary">Tier {guard.tier}</Badge>
+                  </TableCell>
+                  <TableCell>
+                    <Badge variant={guard.is_available ? 'success' : 'warning'}>
+                      {guard.is_available ? 'Available' : 'Unavailable'}
+                    </Badge>
+                  </TableCell>
+                  <TableCell className="text-right">
+                    <div className="flex justify-end gap-2">
+                      <Button
+                        variant="outline"
+                        size="sm"
+                        onClick={() => handleOpenModal(guard)}
+                      >
+                        <Edit2 className="w-4 h-4" />
+                      </Button>
+                      <Button
+                        variant="destructive"
+                        size="sm"
+                        onClick={() => handleDeleteGuard(guard.id)}
+                      >
+                        <Trash2 className="w-4 h-4" />
+                      </Button>
+                    </div>
+                  </TableCell>
+                </TableRow>
+              ))}
+            </TableBody>
+          </Table>
+        </div>
       )}
 
       <AddEditGuardModal

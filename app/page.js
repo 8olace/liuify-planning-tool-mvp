@@ -1,53 +1,67 @@
+import { Button } from '@/components/ui/button'
+import Link from 'next/link'
+
 export default function Home() {
   return (
-    <div>
-      <div className="page-header">
-        <h1>Dashboard</h1>
+    <div className="space-y-6">
+      <div>
+        <h1 className="text-3xl font-bold tracking-tight">Dashboard</h1>
+        <p className="text-gray-600 mt-1">Welcome to Liuify Planning Tool MVP</p>
       </div>
 
-      <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(250px, 1fr))', gap: '20px' }}>
-        <div style={{ background: 'white', padding: '24px', borderRadius: '8px', boxShadow: '0 2px 4px rgba(0,0,0,0.05)' }}>
-          <h3 style={{ marginBottom: '12px', color: '#2c3e50' }}>Getting Started</h3>
-          <p style={{ color: '#666', marginBottom: '16px', fontSize: '14px' }}>
+      <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
+        <div className="bg-white p-6 rounded-lg border border-gray-200 shadow-sm">
+          <h3 className="text-lg font-semibold mb-3 text-gray-900">Getting Started</h3>
+          <p className="text-gray-600 text-sm mb-4">
             Welcome to Liuify Planning Tool MVP. Start by managing your guards and shifts.
           </p>
-          <ul style={{ fontSize: '14px', color: '#666', paddingLeft: '20px' }}>
-            <li style={{ marginBottom: '8px' }}>Add guards to your system</li>
-            <li style={{ marginBottom: '8px' }}>Create shifts and assign locations</li>
-            <li style={{ marginBottom: '8px' }}>Manage assignments and availability</li>
+          <ul className="text-sm text-gray-600 space-y-2 mb-4">
+            <li className="flex items-center">
+              <span className="mr-2">•</span>
+              Add guards to your system
+            </li>
+            <li className="flex items-center">
+              <span className="mr-2">•</span>
+              Create shifts and assign locations
+            </li>
+            <li className="flex items-center">
+              <span className="mr-2">•</span>
+              Manage assignments and availability
+            </li>
           </ul>
         </div>
 
-        <div style={{ background: 'white', padding: '24px', borderRadius: '8px', boxShadow: '0 2px 4px rgba(0,0,0,0.05)' }}>
-          <h3 style={{ marginBottom: '12px', color: '#2c3e50' }}>Setup Required</h3>
-          <p style={{ color: '#666', marginBottom: '16px', fontSize: '14px' }}>
-            Before using the app, ensure Supabase environment variables are configured:
+        <div className="bg-white p-6 rounded-lg border border-gray-200 shadow-sm">
+          <h3 className="text-lg font-semibold mb-3 text-gray-900">Setup Complete</h3>
+          <p className="text-gray-600 text-sm mb-4">
+            Your Supabase environment is configured and ready to use:
           </p>
-          <code style={{ background: '#f5f5f5', padding: '12px', borderRadius: '4px', fontSize: '12px', display: 'block', color: '#333' }}>
-            NEXT_PUBLIC_SUPABASE_URL<br />
-            NEXT_PUBLIC_SUPABASE_ANON_KEY
-          </code>
+          <div className="bg-gray-50 p-3 rounded text-xs font-mono text-gray-700 mb-4">
+            <div className="mb-1">✓ NEXT_PUBLIC_SUPABASE_URL</div>
+            <div>✓ NEXT_PUBLIC_SUPABASE_ANON_KEY</div>
+          </div>
+          <p className="text-xs text-green-600">All systems operational</p>
         </div>
 
-        <div style={{ background: 'white', padding: '24px', borderRadius: '8px', boxShadow: '0 2px 4px rgba(0,0,0,0.05)' }}>
-          <h3 style={{ marginBottom: '12px', color: '#2c3e50' }}>Quick Links</h3>
-          <ul style={{ fontSize: '14px', paddingLeft: '0', listStyle: 'none' }}>
-            <li style={{ marginBottom: '8px' }}>
-              <a href="/guards" style={{ color: '#3498db', textDecoration: 'none' }}>
+        <div className="bg-white p-6 rounded-lg border border-gray-200 shadow-sm">
+          <h3 className="text-lg font-semibold mb-3 text-gray-900">Quick Actions</h3>
+          <div className="space-y-2">
+            <Link href="/guards">
+              <Button variant="outline" className="w-full justify-start text-sm">
                 → Manage Guards
-              </a>
-            </li>
-            <li style={{ marginBottom: '8px' }}>
-              <a href="/shifts" style={{ color: '#3498db', textDecoration: 'none' }}>
+              </Button>
+            </Link>
+            <Link href="/shifts">
+              <Button variant="outline" className="w-full justify-start text-sm">
                 → Manage Shifts
-              </a>
-            </li>
-            <li>
-              <a href="/locations" style={{ color: '#3498db', textDecoration: 'none' }}>
+              </Button>
+            </Link>
+            <Link href="/locations">
+              <Button variant="outline" className="w-full justify-start text-sm">
                 → Manage Locations
-              </a>
-            </li>
-          </ul>
+              </Button>
+            </Link>
+          </div>
         </div>
       </div>
     </div>

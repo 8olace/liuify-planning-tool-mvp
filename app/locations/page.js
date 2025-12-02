@@ -2,6 +2,10 @@
 
 import { useState, useEffect } from 'react'
 import { locationsService } from '@/lib/supabase'
+import { Alert, AlertTitle, AlertDescription } from '@/components/ui/alert'
+import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from '@/components/ui/table'
+import { Button } from '@/components/ui/button'
+import { AlertCircle } from 'lucide-react'
 
 export default function LocationsPage() {
   const [locations, setLocations] = useState([])
@@ -27,45 +31,53 @@ export default function LocationsPage() {
   }
 
   return (
-    <div>
-      <div className="page-header">
-        <h1>Locations Management</h1>
-        <button className="btn-primary" disabled>
-          + Add New Location (Coming Soon)
-        </button>
+    <div className="space-y-6">
+      <div className="flex justify-between items-center">
+        <div>
+          <h1 className="text-3xl font-bold tracking-tight">Locations Management</h1>
+          <p className="text-gray-600 mt-1">View and manage all locations</p>
+        </div>
+        <Button disabled>+ Add New Location (Coming Soon)</Button>
       </div>
 
-      {error && <div className="alert alert-error">{error}</div>}
+      {error && (
+        <Alert variant="destructive">
+          <AlertCircle className="h-4 w-4" />
+          <AlertTitle>Error</AlertTitle>
+          <AlertDescription>{error}</AlertDescription>
+        </Alert>
+      )}
 
       {loading ? (
-        <div className="loading">
-          <div className="spinner"></div>
-          <p>Loading locations...</p>
+        <div className="flex justify-center items-center py-12">
+          <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-primary"></div>
         </div>
       ) : locations.length === 0 ? (
-        <div className="empty-state" style={{ background: 'white', borderRadius: '8px', margin: '20px 0' }}>
-          <h3>No locations found</h3>
-          <p>Locations management coming soon</p>
+        <div className="text-center py-12 bg-white rounded-lg border border-gray-200">
+          <h3 className="text-lg font-semibold text-gray-900">No locations found</h3>
+          <p className="text-gray-600 mt-1">Locations management coming soon</p>
         </div>
       ) : (
-        <table className="guards-table">
-          <thead>
-            <tr>
-              <th>Name</th>
-              <th>Address</th>
-              <th>Created At</th>
-            </tr>
-          </thead>
-          <tbody>
-            {locations.map((location) => (
-              <tr key={location.id}>
-                <td>{location.name}</td>
-                <td>{location.address || '-'}</td>
-                <td>{new Date(location.created_at).toLocaleDateString()}</td>
-              </tr>
-            ))}
-          </tbody>
-        </table>
+        <div className="bg-white rounded-lg border border-gray-200 shadow">
+          <Table>
+            <TableHeader>
+              <TableRow>
+                <TableHead>Name</TableHead>
+                <TableHead>Address</TableHead>
+                <TableHead>Created At</TableHead>
+              </TableRow>
+            </TableHeader>
+            <TableBody>
+              {locations.map((location) => (
+                <TableRow key={location.id}>
+                  <TableCell className="font-medium">{location.name}</TableCell>
+                  <TableCell>{location.address || '-'}</TableCell>
+                  <TableCell>{new Date(location.created_at).toLocaleDateString()}</TableCell>
+                </TableRow>
+              ))}
+            </TableBody>
+          </Table>
+        </div>
       )}
     </div>
   )

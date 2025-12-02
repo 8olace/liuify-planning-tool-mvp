@@ -1,6 +1,11 @@
 'use client'
 
 import { useState, useEffect } from 'react'
+import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogFooter } from '@/components/ui/dialog'
+import { Button } from '@/components/ui/button'
+import { Input } from '@/components/ui/input'
+import { Label } from '@/components/ui/label'
+import { Select } from '@/components/ui/select'
 
 export default function AddEditGuardModal({ isOpen, onClose, guard, onSave, isLoading }) {
   const [formData, setFormData] = useState({
@@ -75,112 +80,104 @@ export default function AddEditGuardModal({ isOpen, onClose, guard, onSave, isLo
     }
   }
 
-  if (!isOpen) {
-    return null
-  }
-
   return (
-    <div className="modal-overlay" onClick={onClose}>
-      <div className="modal" onClick={(e) => e.stopPropagation()}>
-        <div className="modal-header">
-          <h2>{guard ? 'Edit Guard' : 'Add New Guard'}</h2>
-          <button className="modal-close" onClick={onClose} disabled={isLoading}>
-            ✕
-          </button>
-        </div>
+    <Dialog open={isOpen} onOpenChange={onClose}>
+      <DialogContent className="sm:max-w-[425px]">
+        <DialogHeader>
+          <DialogTitle>{guard ? 'Edit Guard' : 'Add New Guard'}</DialogTitle>
+        </DialogHeader>
 
-        <form onSubmit={handleSubmit}>
-          <div className="modal-body">
-            <div className="form-group">
-              <label htmlFor="name">Name *</label>
-              <input
-                id="name"
-                type="text"
-                name="name"
-                value={formData.name}
-                onChange={handleChange}
-                placeholder="Enter guard name"
-                disabled={isLoading}
-              />
-              {errors.name && <span style={{ color: '#e74c3c', fontSize: '12px' }}>{errors.name}</span>}
-            </div>
-
-            <div className="form-group">
-              <label htmlFor="email">Email</label>
-              <input
-                id="email"
-                type="email"
-                name="email"
-                value={formData.email}
-                onChange={handleChange}
-                placeholder="Enter email address"
-                disabled={isLoading}
-              />
-              {errors.email && <span style={{ color: '#e74c3c', fontSize: '12px' }}>{errors.email}</span>}
-            </div>
-
-            <div className="form-group">
-              <label htmlFor="phone">Phone</label>
-              <input
-                id="phone"
-                type="tel"
-                name="phone"
-                value={formData.phone}
-                onChange={handleChange}
-                placeholder="Enter phone number"
-                disabled={isLoading}
-              />
-              {errors.phone && <span style={{ color: '#e74c3c', fontSize: '12px' }}>{errors.phone}</span>}
-            </div>
-
-            <div className="form-group">
-              <label htmlFor="tier">Tier</label>
-              <select
-                id="tier"
-                name="tier"
-                value={formData.tier}
-                onChange={handleChange}
-                disabled={isLoading}
-              >
-                <option value={1}>Tier 1 - Basic</option>
-                <option value={2}>Tier 2 - Advanced</option>
-                <option value={3}>Tier 3 - Expert</option>
-              </select>
-            </div>
-
-            <div className="form-group">
-              <label>
-                <input
-                  type="checkbox"
-                  name="is_available"
-                  checked={formData.is_available}
-                  onChange={handleChange}
-                  disabled={isLoading}
-                />
-                {' '}Available for shifts
-              </label>
-            </div>
+        <form onSubmit={handleSubmit} className="space-y-4">
+          <div className="space-y-2">
+            <Label htmlFor="name">Name *</Label>
+            <Input
+              id="name"
+              type="text"
+              name="name"
+              value={formData.name}
+              onChange={handleChange}
+              placeholder="Enter guard name"
+              disabled={isLoading}
+            />
+            {errors.name && <span className="text-xs text-red-600">{errors.name}</span>}
           </div>
 
-          <div className="modal-footer">
-            <button
+          <div className="space-y-2">
+            <Label htmlFor="email">Email</Label>
+            <Input
+              id="email"
+              type="email"
+              name="email"
+              value={formData.email}
+              onChange={handleChange}
+              placeholder="Enter email address"
+              disabled={isLoading}
+            />
+            {errors.email && <span className="text-xs text-red-600">{errors.email}</span>}
+          </div>
+
+          <div className="space-y-2">
+            <Label htmlFor="phone">Phone</Label>
+            <Input
+              id="phone"
+              type="tel"
+              name="phone"
+              value={formData.phone}
+              onChange={handleChange}
+              placeholder="Enter phone number"
+              disabled={isLoading}
+            />
+            {errors.phone && <span className="text-xs text-red-600">{errors.phone}</span>}
+          </div>
+
+          <div className="space-y-2">
+            <Label htmlFor="tier">Tier</Label>
+            <Select
+              id="tier"
+              name="tier"
+              value={formData.tier}
+              onChange={handleChange}
+              disabled={isLoading}
+            >
+              <option value={1}>Tier 1 - Basic</option>
+              <option value={2}>Tier 2 - Advanced</option>
+              <option value={3}>Tier 3 - Expert</option>
+            </Select>
+          </div>
+
+          <div className="flex items-center space-x-2">
+            <input
+              id="is_available"
+              type="checkbox"
+              name="is_available"
+              checked={formData.is_available}
+              onChange={handleChange}
+              disabled={isLoading}
+              className="h-4 w-4 rounded border-gray-300"
+            />
+            <Label htmlFor="is_available" className="mb-0">
+              Available for shifts
+            </Label>
+          </div>
+
+          <DialogFooter>
+            <Button
               type="button"
-              className="btn-secondary"
+              variant="outline"
               onClick={onClose}
               disabled={isLoading}
             >
               Cancel
-            </button>
-            <button
+            </Button>
+            <Button
               type="submit"
-              className="btn-primary"
               disabled={isLoading}
             >
               {isLoading ? 'Saving...' : 'Save Guard'}
-            </button>
-          </div>
+            </Button>
+          </DialogFooter>
         </form>
-      </div>
-    </div>
+      </DialogContent>
+    </Dialog>
   )
 }
