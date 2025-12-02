@@ -1,5 +1,5 @@
 import './globals.css'
-import Navigation from '@/components/Navigation.jsx'
+import Navigation from '@/components/Navigation'
 
 export const metadata = {
   title: 'Liuify Planning Tool MVP',
